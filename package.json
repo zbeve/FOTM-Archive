@@ -2,10 +2,10 @@
   "name": "fotm-archive",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
+    "dev": "./node_modules/.bin/next.cmd dev",
+    "build": "./node_modules/.bin/next.cmd build",
+    "start": "./node_modules/.bin/next.cmd start",
+    "lint": "./node_modules/.bin/next.cmd lint"
   },
   "dependencies": {
     "next": "12.0.10",
