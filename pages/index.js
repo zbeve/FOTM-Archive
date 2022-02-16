@@ -2,31 +2,34 @@ import Head from 'next/head'
 import Image from 'next/image'
 import styles from '../styles/Home.module.scss'
 import Link from 'next/link'
-import { getPlaylists } from '../lib/spotify'
+import { getPlaylists, getPlaylistData } from '../lib/spotify'
 import Playlist from '../components/Playlist'
 
-export default function Home({ playlists }) {
-  const nameFilter = ["fotm", "FOTM", "FotM", "foty", "FOTY", "Group", "group", "GROUP"]
+export default function Home({ playlistsData }) {
+  // const nameFilter = ["fotm", "FOTM", "FotM", "foty", "FOTY", "Group", "group", "GROUP"]
 
   return (
     <div className={ styles.container }>
-      { playlists.map((playlist, index) => (
-        <>
-          { nameFilter.some(el => playlist.name.includes(el)) ?
-            <div className={ styles.playlistContainer } key={ playlist.id }>
-              <Playlist data={ playlist } />
-            </div>
-            :
-            // Nothing
-            <></>
-          }
-        </>
+      { playlistsData.map((playlist, index) => (
+          <div className={ styles.playlistContainer } key={ playlist.id }>
+            <Playlist playlist={ playlist } />
+          </div>
+        // <>
+        //   { nameFilter.some(el => playlist.name.includes(el)) ?
+        //     <div className={ styles.playlistContainer } key={ playlist.id }>
+        //       <Playlist playlist={ playlist } />
+        //     </div>
+        //     :
+        //     // Nothing
+        //     <></>
+        //   }
+        // </>
       ))}
     </div>
   )
 }
 
-export async function getServerSideProps() {
+export async function getStaticProps() {
   const MAX_PLAYLISTS = 100
   const limit = 10
   const offset = 10
@@ -54,9 +57,14 @@ export async function getServerSideProps() {
       //     },
       // })))
 
-      // items.forEach(playlist => console.log(playlist.images[0]))
+      // items.forEach(playlist => console.log(playlist))
+      // console.log(items[10])
 
-      items.forEach(playlist => playlists.push({
+      const filtered = items.filter(playlist => nameFilter(playlist.name))
+      // console.log(test)
+
+      filtered.forEach(playlist => playlists.push({
+          id:             playlist.id,
           collaborative:  playlist.collaborative,
           url:            playlist.external_urls.spotify,
           image:
@@ -74,7 +82,42 @@ export async function getServerSideProps() {
       }))
   }
 
-  return {
-    props: { playlists },
+  const playlistsData = []
+
+  for(const playlist of playlists) {
+    const response = await getPlaylistData(playlist.id)
+    const item = await response.json()
+
+    playlistsData.push({
+      id:             playlist.id,
+      collaborative:  playlist.collaborative,
+      url:            playlist.url,
+      image:          playlist.image,
+      name:           playlist.name,
+      followers:      item.followers.total,
+      tracks:         item.tracks
+    })
   }
-};
+
+  // playlists.forEach(playlist => {
+  //   const response = await getFollowers(playlist.id)
+  //   const items = await response.json()
+
+  //   console.log(items)
+  // })
+
+  // console.log(playlists[2])
+
+  // console.log(itemsToo)
+  // itemsToo.forEach(stat => console.log(stat))
+
+  return {
+    props: { playlistsData },
+    revalidate: 600,
+  }
+}
+
+function nameFilter(playlistName) {
+  const nameFilter = ["fotm", "FOTM", "FotM", "foty", "FOTY", "Group", "group", "GROUP"]
+  return nameFilter.some(el => playlistName.includes(el))
+}

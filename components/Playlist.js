@@ -1,24 +1,45 @@
 import Image from 'next/image'
+import { getFollowers } from '../lib/spotify'
+import { useCallback, useEffect, useState } from 'react'
+
 import styles from '../styles/Playlist.module.scss'
 
-function Playlist({ data }) {
-    // console.log(data)
+function Playlist({ playlist }) {
+    // const [data, setData] = useState(null)
+
+    // const fetchData = useCallback(async () => {
+    //     const response = await getFollowers(playlist.id)
+    //     const { items } = await response.json()
+    //     setData(items)
+    // }, [])
+
+    // useEffect(() => {
+    //     fetchData()
+    // }, [fetchData])
+
+    // console.log(playlist)
   return (
-    <a href={ data.url } target="_blank">
+    // <a href={ playlist.url } target="_blank">
         <div className={ styles.container }>
             <div className={ styles.image }>
-                <Image layout="responsive" src={ data.image.src } width="640" height="640" />
+                <Image layout="responsive" src={ playlist.image.src } width="640" height="640" />
             </div>
             <div className={ styles.info }>
-                <h2 className={ styles.name }>{ data.name }</h2>
+                <h2 className={ styles.name }>{ playlist.name }</h2>
                 <div className={ styles.count }>
                     <p className={ styles.songCount }>
-                        { data.tracks.count }
+                        { playlist.tracks.total }
+                    </p>
+                    <p>
+                        {playlist.followers}
+                    </p>
+                    <p>
+                        {/* {playlist.tracks} */}
                     </p>
                 </div>
             </div>
         </div>
-    </a>
+    // </a>
   )
 }
 
