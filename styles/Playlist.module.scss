@@ -1,0 +1,36 @@
+.container {
+    display: flex;
+    flex-direction: column;
+
+    max-width: 12em;
+    margin: 1em 2em 1em 2em;
+
+    border: 1px solid black;
+    background-color: #6b6b6b;
+    border-radius: 1em;
+
+    .image {
+        // display: block;
+        // width: auto;
+        // height: 10em;
+        margin: 1em;
+
+        span {
+            width: 10em !important;
+        }
+    }
+
+    .info {
+        display: flex;
+        flex-direction: column;
+        // max-width: 10em;
+
+        .name {
+            // max-width: 10em;
+            font-size: 1em;
+            // overflow: hidden;
+        }
+    }
+
+
+}

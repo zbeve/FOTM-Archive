@@ -1,0 +1,33 @@
+import { getPlaylists } from '../../lib/spotify'
+
+export default async (_, res) => {
+    const MAX_PLAYLISTS = 100
+    const limit = 10
+    const offset = 10
+
+    const playlists = []
+
+    for(let i = 0; i < MAX_PLAYLISTS; i += offset ) {
+        const response = await getPlaylists(limit, i)
+        const { items } = await response.json()
+
+        playlists.push( items.map((playlist) => ({
+            collaborative:  playlist.collaborative,
+            url:            playlist.external_urls.spotify,
+            image:
+            {
+                src:        playlist.images[0].url,
+                width:      playlist.images[0].width,
+                height:     playlist.images[0].height,
+            },
+            name:           playlist.name,
+            tracks:
+            {
+                count:      playlist.tracks.total,
+                src:        playlist.tracks.href,
+            },
+        })))
+    }
+
+    return res.status(200).json({ playlists })
+};
