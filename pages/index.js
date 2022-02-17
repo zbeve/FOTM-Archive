@@ -5,8 +5,11 @@ import Link from 'next/link'
 import { getAllPlaylists, getPlaylists } from '../lib/spotify'
 import Playlist from '../components/Playlist'
 
+import { usePlaylistContext } from '../components/PlaylistContext'
+
 export default function Home({ playlists }) {
-  // const nameFilter = ["fotm", "FOTM", "FotM", "foty", "FOTY", "Group", "group", "GROUP"]
+  const playlistList = usePlaylistContext()
+  playlistList.setPlaylistList(playlists)
 
   return (
     <div className={ styles.container }>

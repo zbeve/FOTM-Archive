@@ -2,12 +2,14 @@ import { useRouter } from 'next/router'
 import ErrorPage from 'next/error'
 import { getPlaylistData, getAllPlaylists, getSongData } from '../../lib/spotify'
 import Image from 'next/image'
+import { usePlaylistContext } from '../../components/PlaylistContext'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMusic, faPerson } from '@fortawesome/free-solid-svg-icons'
 
 import styles from '../../styles/Slug.module.scss'
 import StatsBar from '../../components/StatsBar'
+import Link from 'next/link'
 
 export default function Playlist({ playlist, songs, contributors, averages }) {
   const router = useRouter()
@@ -15,7 +17,19 @@ export default function Playlist({ playlist, songs, contributors, averages }) {
   if (!router.isFallback && !playlist?.id) {
     return <ErrorPage statusCode={404} />
   }
+
+  const playlistList = usePlaylistContext()
+  let currentIndex = 0
   
+  playlistList.playlistList.find((el, index) => {
+    if(el.id == playlist.id) {
+      currentIndex = index
+      return true
+    }
+  })
+
+  console.log(playlistList.playlistList[currentIndex].id)
+
   return (
     <>
         {router.isFallback ? (
@@ -29,6 +43,23 @@ export default function Playlist({ playlist, songs, contributors, averages }) {
               { console.log(contributors )}
               { console.log("-----------------") }
               { console.log(averages )} */}
+
+              <div className={ styles.navigation }>
+                { currentIndex == 0 ?
+                  <></>
+                  :
+                  <Link as={`/playlist/${playlistList.playlistList[currentIndex - 1].id}`} href="/playlist/[slug]">
+                    Prev
+                  </Link>
+                }
+                { currentIndex == playlistList.playlistList.length - 1 ?
+                  <></>
+                  :
+                  <Link as={`/playlist/${playlistList.playlistList[currentIndex + 1].id}`} href="/playlist/[slug]">
+                    Next
+                  </Link>
+                }
+              </div>
 
               <div className={ styles.image }>
                 <Image layout="responsive" src={ playlist.images[0].url } width="640" height="640" />
@@ -82,13 +113,13 @@ export async function getStaticProps({ params }) {
     const songs = await responseSong.json()
 
     let averages = {
-      acousticness: 0,
       danceability: 0,
       energy: 0,
+      valence: 0,
+      acousticness: 0,
       instrumentalness: 0,
       liveness: 0,
       speechiness: 0,
-      valence: 0,
     }
 
     let loudness = 0
