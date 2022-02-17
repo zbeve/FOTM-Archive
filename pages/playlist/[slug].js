@@ -3,6 +3,9 @@ import ErrorPage from 'next/error'
 import { getPlaylistData, getAllPlaylists, getSongData } from '../../lib/spotify'
 import Image from 'next/image'
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faMusic, faPerson } from '@fortawesome/free-solid-svg-icons'
+
 import styles from '../../styles/Slug.module.scss'
 import StatsBar from '../../components/StatsBar'
 
@@ -19,13 +22,13 @@ export default function Playlist({ playlist, songs, contributors, averages }) {
             <h1>...loading</h1>
         ) : (
             <div className={ styles.container }>
-              { console.log(playlist) }
+              {/* { console.log(playlist) }
               { console.log("-----------------") }
               { console.log(songs) }
               { console.log("-----------------") }
               { console.log(contributors )}
               { console.log("-----------------") }
-              { console.log(averages )}
+              { console.log(averages )} */}
 
               <div className={ styles.image }>
                 <Image layout="responsive" src={ playlist.images[0].url } width="640" height="640" />
@@ -34,8 +37,14 @@ export default function Playlist({ playlist, songs, contributors, averages }) {
               <div className={ styles.stats }>
                 <h1 className={ styles.name }>{ playlist.name }</h1>
                 <div className={ styles.counts }>
-                  <p className={ styles.followers }>{ playlist.followers.total }</p>
-                  <p className={ styles.song }>{ playlist.tracks.total }</p>
+                  <div className={ styles.wrapper }>
+                    <FontAwesomeIcon icon={ faMusic } />
+                    <p className={ styles.song }>{ playlist.tracks.total }</p>
+                  </div>
+                  <div className={ styles.wrapper}>
+                    <FontAwesomeIcon icon={ faPerson } />
+                    <p className={ styles.followers }>{ playlist.followers.total }</p>
+                  </div>
                 </div>
                 <div className={ styles.stats }>
                   { Object.keys(averages).map((key, value) => (
@@ -86,6 +95,8 @@ export async function getStaticProps({ params }) {
     let tempo = 0
 
     for(const song of songs.audio_features) {
+      if(song == null) continue
+
       averages["acousticness"] += song.acousticness
       averages["danceability"] += song.danceability
       averages["energy"] += song.energy
@@ -115,6 +126,7 @@ export async function getStaticProps({ params }) {
 
     return {
         props: { playlist, songs, contributors, averages },
+        revalidate: 600,
     }
 }
 
