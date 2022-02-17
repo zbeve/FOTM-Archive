@@ -1,6 +1,7 @@
 import Image from 'next/image'
 import { getFollowers } from '../lib/spotify'
 import { useCallback, useEffect, useState } from 'react'
+import Link from 'next/link'
 
 import styles from '../styles/Playlist.module.scss'
 
@@ -19,7 +20,7 @@ function Playlist({ playlist }) {
 
     // console.log(playlist)
   return (
-    // <a href={ playlist.url } target="_blank">
+    <Link as={`/playlist/${playlist.id}`} href="/playlist/[slug]">
         <div className={ styles.container }>
             <div className={ styles.image }>
                 <Image layout="responsive" src={ playlist.image.src } width="640" height="640" />
@@ -39,7 +40,7 @@ function Playlist({ playlist }) {
                 </div>
             </div>
         </div>
-    // </a>
+    </Link>
   )
 }
 
