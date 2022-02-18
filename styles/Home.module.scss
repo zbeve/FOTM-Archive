@@ -12,6 +12,8 @@
     flex-wrap: nowrap;
     height: 90vh;
     width: 100vw;
-    overflow-x: auto;
+
+    overflow-x: scroll; /* Must be 'scroll' not 'auto' for ios */
+    -webkit-overflow-scrolling: touch;
   }
 }
