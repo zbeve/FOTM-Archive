@@ -10,11 +10,47 @@
         }
     }
 
+
+
     .stats {
         .name {
             font-size: 1.5em;
             color: white;
             text-align: center;
+        }
+    }
+}
+
+.navigation {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+
+    background-color: #6b6b6b;
+
+    padding: 1em 4em 1em 4em;
+
+    margin: 0 0 2em 0;
+
+    .navButton {
+        width: 30%;
+        height: 3em;
+
+        background-color: #252525;
+        text-align: center;
+
+        border: 3px solid #ffffff;
+        border-radius: 2em;
+
+        display: flex;
+
+        svg {
+            color: #ff6f59;
+            margin: auto;
         }
     }
 }

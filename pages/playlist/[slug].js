@@ -5,7 +5,7 @@ import Image from 'next/image'
 import { usePlaylistContext } from '../../components/PlaylistContext'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faMusic, faPerson } from '@fortawesome/free-solid-svg-icons'
+import { faMusic, faPerson, faHouse, faChevronRight, faChevronLeft, faHourglassClock, faVolumeHigh } from '@fortawesome/free-solid-svg-icons'
 
 import styles from '../../styles/Slug.module.scss'
 import StatsBar from '../../components/StatsBar'
@@ -35,6 +35,33 @@ export default function Playlist({ playlist, songData, nextSlug, prevSlug }) {
         {router.isFallback ? (
             <h1>...loading</h1>
         ) : (
+          <>
+            <div className={ styles.navigation }>
+              <div className={ styles.navButton }>
+                { prevSlug == undefined ?
+                  <></>
+                  :
+                  <Link as={`/playlist/${prevSlug}`} href="/playlist/[slug]">
+                    <FontAwesomeIcon icon={ faChevronLeft } />
+                  </Link>
+                }
+              </div>
+              <div className={ styles.navButton }>
+                <Link as={`/`} href="/">
+                  <FontAwesomeIcon icon={ faHouse } />
+                </Link>
+              </div>
+              <div className={ styles.navButton }>
+                { nextSlug == undefined ?
+                  <></>
+                  :
+                  <Link as={`/playlist/${nextSlug}`} href="/playlist/[slug]">
+                    <FontAwesomeIcon icon={ faChevronRight } />
+                  </Link>
+                }
+              </div>
+            </div>
+
             <div className={ styles.container }>
               {/* { console.log(playlist) }
               { console.log("-----------------") }
@@ -43,23 +70,6 @@ export default function Playlist({ playlist, songData, nextSlug, prevSlug }) {
               { console.log(contributors )}
               { console.log("-----------------") }
               { console.log(averages )} */}
-
-              <div className={ styles.navigation }>
-                { prevSlug == undefined ?
-                  <></>
-                  :
-                  <Link as={`/playlist/${prevSlug}`} href="/playlist/[slug]">
-                    Prev
-                  </Link>
-                }
-                { nextSlug == undefined ?
-                  <></>
-                  :
-                  <Link as={`/playlist/${nextSlug}`} href="/playlist/[slug]">
-                    Next
-                  </Link>
-                }
-              </div>
 
               <div className={ styles.image }>
                 <Image layout="responsive" src={ playlist.images[0].url } width="640" height="640" />
@@ -84,6 +94,7 @@ export default function Playlist({ playlist, songData, nextSlug, prevSlug }) {
                 </div>
               </div>
             </div>
+          </>
         )}
     </>
   )
