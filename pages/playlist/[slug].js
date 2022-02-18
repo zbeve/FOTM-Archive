@@ -90,7 +90,6 @@ export default function Playlist({ playlist, songs, contributors, averages, next
 }
 
 export async function getStaticProps({ params }) {
-
     const response = await getPlaylistData(params.slug)
     const playlist = await response.json()
 
@@ -154,26 +153,26 @@ export async function getStaticProps({ params }) {
     averages["speechiness"] *= 100
     averages["valence"] *= 100
 
-    // const responsePlaylists = await getAllPlaylists()
-    // const playlists = await responsePlaylists
+    const responsePlaylists = await getAllPlaylists()
+    const playlists = await responsePlaylists
 
     let prevSlug = ""
     let nextSlug = ""
 
-    // playlists.map((playlist, index) => {
-    //   if(index > 0 && index < (playlists.length - 1) && playlist.id == params.slug) {
-    //     prevSlug = playlists[index - 1].id
-    //     nextSlug = playlists[index + 1].id
-    //   }
-    //   else if (index == 0 && playlist.id == params.slug) {
-    //     prevSlug = playlists[playlists.length - 1].id
-    //     nextSlug = playlists[index + 1].id
-    //   }
-    //   else if (index == (playlists.length - 1) && playlist.id == params.slug) {
-    //     prevSlug = playlists[index - 1].id
-    //     nextSlug = playlists[0].id
-    //   }
-    // })
+    playlists.map((playlist, index) => {
+      if(index > 0 && index < (playlists.length - 1) && playlist.id == params.slug) {
+        prevSlug = playlists[index - 1].id
+        nextSlug = playlists[index + 1].id
+      }
+      else if (index == 0 && playlist.id == params.slug) {
+        prevSlug = playlists[playlists.length - 1].id
+        nextSlug = playlists[index + 1].id
+      }
+      else if (index == (playlists.length - 1) && playlist.id == params.slug) {
+        prevSlug = playlists[index - 1].id
+        nextSlug = playlists[0].id
+      }
+    })
 
     return {
         props: { playlist, songs, contributors, averages, prevSlug, nextSlug },
