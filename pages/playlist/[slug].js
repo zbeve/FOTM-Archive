@@ -11,24 +11,24 @@ import styles from '../../styles/Slug.module.scss'
 import StatsBar from '../../components/StatsBar'
 import Link from 'next/link'
 
-export default function Playlist({ playlist, songs, contributors, averages }) {
+export default function Playlist({ playlist, songs, contributors, averages, nextSlug, prevSlug }) {
   const router = useRouter()
 
   if (!router.isFallback && !playlist?.id) {
     return <ErrorPage statusCode={404} />
   }
 
-  const playlistList = usePlaylistContext()
-  let currentIndex = 0
+  // const playlistList = usePlaylistContext()
+  // let currentIndex = 0
   
-  playlistList.playlistList.find((el, index) => {
-    if(el.id == playlist.id) {
-      currentIndex = index
-      return true
-    }
-  })
+  // playlistList.playlistList.find((el, index) => {
+  //   if(el.id == playlist.id) {
+  //     currentIndex = index
+  //     return true
+  //   }
+  // })
 
-  console.log(playlistList.playlistList[currentIndex].id)
+  // console.log(playlistList.playlistList[currentIndex].id)
 
   return (
     <>
@@ -45,17 +45,17 @@ export default function Playlist({ playlist, songs, contributors, averages }) {
               { console.log(averages )} */}
 
               <div className={ styles.navigation }>
-                { currentIndex == 0 ?
+                { prevSlug == undefined ?
                   <></>
                   :
-                  <Link as={`/playlist/${playlistList.playlistList[currentIndex - 1].id}`} href="/playlist/[slug]">
+                  <Link as={`/playlist/${prevSlug}`} href="/playlist/[slug]">
                     Prev
                   </Link>
                 }
-                { currentIndex == playlistList.playlistList.length - 1 ?
+                { nextSlug == undefined ?
                   <></>
                   :
-                  <Link as={`/playlist/${playlistList.playlistList[currentIndex + 1].id}`} href="/playlist/[slug]">
+                  <Link as={`/playlist/${nextSlug}`} href="/playlist/[slug]">
                     Next
                   </Link>
                 }
@@ -98,7 +98,6 @@ export async function getStaticProps({ params }) {
     let songIDs = ''
 
     for(const track of playlist.tracks.items) {
-      // console.log(song)
       contributors[track.added_by.id] = (contributors[track.added_by.id] || 0) + 1
 
       if(songIDs == '') {
@@ -155,8 +154,29 @@ export async function getStaticProps({ params }) {
     averages["speechiness"] *= 100
     averages["valence"] *= 100
 
+    const responsePlaylists = await getAllPlaylists()
+    const playlists = await responsePlaylists
+
+    let prevSlug = ""
+    let nextSlug = ""
+
+    playlists.map((playlist, index) => {
+      if(index > 0 && index < (playlists.length - 1) && playlist.id == params.slug) {
+        prevSlug = playlists[index - 1].id
+        nextSlug = playlists[index + 1].id
+      }
+      else if (index == 0 && playlist.id == params.slug) {
+        prevSlug = playlists[playlists.length - 1].id
+        nextSlug = playlists[index + 1].id
+      }
+      else if (index == (playlists.length - 1) && playlist.id == params.slug) {
+        prevSlug = playlists[index - 1].id
+        nextSlug = playlists[0].id
+      }
+    })
+
     return {
-        props: { playlist, songs, contributors, averages },
+        props: { playlist, songs, contributors, averages, prevSlug, nextSlug },
         revalidate: 600,
     }
 }

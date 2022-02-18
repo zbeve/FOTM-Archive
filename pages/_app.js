@@ -1,4 +1,4 @@
-import { PlaylistWrapper } from '../components/PlaylistContext'
+// import { PlaylistWrapper } from '../components/PlaylistContext'
 
 import '../styles/globals.css'
 
@@ -8,9 +8,9 @@ config.autoAddCss = false
 
 function MyApp({ Component, pageProps }) {
   return(
-    <PlaylistWrapper>
+    // <PlaylistWrapper>
       <Component {...pageProps} />
-    </PlaylistWrapper>
+    // </PlaylistWrapper>
   )
 }
 
