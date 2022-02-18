@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router'
 import ErrorPage from 'next/error'
-import { getPlaylistData, getAllPlaylists, getSongData } from '../../lib/spotify'
+import { getPlaylistData, getAllPlaylists, getAllSongData, spotifyFetch } from '../../lib/spotify'
 import Image from 'next/image'
 import { usePlaylistContext } from '../../components/PlaylistContext'
 
@@ -11,7 +11,7 @@ import styles from '../../styles/Slug.module.scss'
 import StatsBar from '../../components/StatsBar'
 import Link from 'next/link'
 
-export default function Playlist({ playlist, songs, contributors, averages, nextSlug, prevSlug }) {
+export default function Playlist({ playlist, songData, nextSlug, prevSlug }) {
   const router = useRouter()
 
   if (!router.isFallback && !playlist?.id) {
@@ -78,8 +78,8 @@ export default function Playlist({ playlist, songs, contributors, averages, next
                   </div>
                 </div>
                 <div className={ styles.stats }>
-                  { Object.keys(averages).map((key, value) => (
-                    <StatsBar key={ key.id } name={ key } value ={ averages[key] }/>
+                  { Object.keys(songData.averages).map((key, value) => (
+                    <StatsBar key={ key.id } name={ key } value={ parseFloat(songData.averages[key]) }/>
                   ))}
                 </div>
               </div>
@@ -96,62 +96,30 @@ export async function getStaticProps({ params }) {
     let contributors = {}
     let songIDs = ''
 
-    for(const track of playlist.tracks.items) {
-      contributors[track.added_by.id] = (contributors[track.added_by.id] || 0) + 1
+    playlist.tracks.items
 
-      if(songIDs == '') {
-        songIDs = songIDs.concat(track.track.id)
-      }
-      else {
-        songIDs = songIDs.concat(",", track.track.id)
-      }
+    // console.log(playlist.tracks)
+
+    let tracks = []
+    let next = playlist.tracks.next
+
+    playlist.tracks.items.map((track) => {
+      tracks.push(track)
+    })
+
+    while(next != null) {
+      const fetch = await spotifyFetch(next)
+      const data = await fetch.json()
+
+      data.items.map((track) => {
+        tracks.push(track)
+      })
+
+      next = data.next
     }
 
-    const responseSong = await getSongData(songIDs)
-    const songs = await responseSong.json()
-
-    let averages = {
-      danceability: 0,
-      energy: 0,
-      valence: 0,
-      acousticness: 0,
-      instrumentalness: 0,
-      liveness: 0,
-      speechiness: 0,
-    }
-
-    let loudness = 0
-    let tempo = 0
-
-    for(const song of songs.audio_features) {
-      if(song == null) continue
-
-      averages["acousticness"] += song.acousticness
-      averages["danceability"] += song.danceability
-      averages["energy"] += song.energy
-      averages["instrumentalness"] += song.instrumentalness
-      averages["liveness"] += song.liveness
-      averages["speechiness"] += song.speechiness
-      averages["valence"] += song.valence
-
-      loudness += song.loudness
-      tempo += song.tempo
-    }
-
-    for(const key in averages) {
-      averages[key] = (averages[key] / songs.audio_features.length).toFixed(3)
-    }
-
-    loudness = (loudness / songs.audio_features.length).toFixed(3)
-    tempo = (tempo / songs.audio_features.length).toFixed(3)
-
-    averages["acousticness"] *= 100
-    averages["danceability"] *= 100
-    averages["energy"] *= 100
-    averages["instrumentalness"] *= 100
-    averages["liveness"] *= 100
-    averages["speechiness"] *= 100
-    averages["valence"] *= 100
+    const allSongData = await getAllSongData(tracks)
+    const songData = await allSongData
 
     const responsePlaylists = await getAllPlaylists()
     const playlists = await responsePlaylists
@@ -175,7 +143,12 @@ export async function getStaticProps({ params }) {
     })
 
     return {
-        props: { playlist, songs, contributors, averages, prevSlug, nextSlug },
+        props: {
+          playlist,
+          songData,
+          prevSlug,
+          nextSlug
+        },
         revalidate: 600,
     }
 }
