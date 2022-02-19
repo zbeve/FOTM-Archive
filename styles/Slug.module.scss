@@ -144,10 +144,14 @@
         border-radius: 2em;
 
         display: flex;
+        align-items: center;
 
         svg {
             color: #ff6f59;
-            margin: auto;
+            // margin: auto;
+            width: 100%;
+            height: 1.5em;
+            // padding: 0.5em;
         }
     }
 }

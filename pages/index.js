@@ -4,13 +4,17 @@ import Playlist from '../components/Playlist'
 
 export default function Home({ playlists }) {
   return (
-    <div className={ styles.container }>
-      { playlists.map((playlist, index) => (
-          <div className={ styles.playlistContainer } key={ playlist.id }>
-            <Playlist playlist={ playlist } />
-          </div>
-      ))}
-    </div>
+    <>
+      <h1 className={ styles.title }>FOTM Archive</h1>
+      <div className={ styles.container }>
+        
+        { playlists.map((playlist, index) => (
+            <div className={ styles.playlistContainer } key={ playlist.id }>
+              <Playlist playlist={ playlist } />
+            </div>
+        ))}
+      </div>
+    </>
   )
 }
 

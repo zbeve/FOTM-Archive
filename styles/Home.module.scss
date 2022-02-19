@@ -17,3 +17,20 @@
     -webkit-overflow-scrolling: touch;
   }
 }
+
+.title {
+  position: relative;
+  width: 100vw;
+  text-align: center;
+  font-family: 'Permanent Marker', cursive;
+  color: #ff6f59;
+  font-size: 3em;
+}
+
+@media (max-width: 1000px) {
+  .title {
+    position: absolute;
+    z-index: 10;
+    top: 0;
+  }
+}
