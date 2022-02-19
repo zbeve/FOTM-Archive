@@ -126,7 +126,7 @@ export default function Playlist({ playlist, songData, nextSlug, prevSlug }) {
                 </div>
                 <div className={ styles.statsExplained }>
                   { explanations.map(explanation => (
-                    <div className={ styles.explanation }>
+                    <div key={ explanation.id } className={ styles.explanation }>
                       <hr></hr>
                       <h2 className={ styles.name }>{ explanation.name }</h2>
                       <p className={ styles.description }>{ explanation.description }</p>
