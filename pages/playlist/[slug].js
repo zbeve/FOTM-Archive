@@ -4,7 +4,7 @@ import { getPlaylistData, getAllPlaylists, getAllSongData, spotifyFetch } from '
 import Image from 'next/image'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faMusic, faPerson, faHouse, faChevronRight, faChevronLeft, faHourglass, faVolumeHigh } from '@fortawesome/free-solid-svg-icons'
+import { faMusic, faPerson, faHouse, faChevronRight, faChevronLeft, faHourglass, faVolumeHigh, faStar } from '@fortawesome/free-solid-svg-icons'
 
 import styles from '../../styles/Slug.module.scss'
 import StatsBar from '../../components/StatsBar'
@@ -54,7 +54,10 @@ export default function Playlist({ playlist, songData, nextSlug, prevSlug }) {
       name: "Loudness",
       description: "(represented by the volume icon) The overall loudness of a track in decibels (dB). Loudness values are averaged across the entire track and are useful for comparing relative loudness of tracks. Loudness is the quality of a sound that is the primary psychological correlate of physical strength (amplitude). Values typically range between -60 and 0 db.",
     },
-
+    {
+      name: "Top Contributor",
+      description: "(represented by the star icon) The user who contributed the most songs to the playlist.",
+    },
   ]
 
   if (!router.isFallback && !playlist?.id) {
@@ -78,7 +81,7 @@ export default function Playlist({ playlist, songData, nextSlug, prevSlug }) {
                 }
               </div>
               <div className={ styles.navButton }>
-                <Link as={`/`} href="/">
+                <Link as="/" href="/">
                   <FontAwesomeIcon icon={ faHouse } />
                 </Link>
               </div>
@@ -100,6 +103,12 @@ export default function Playlist({ playlist, songData, nextSlug, prevSlug }) {
 
               <div className={ styles.stats }>
                 <h1 className={ styles.name }>{ playlist.name }</h1>
+                <p className={ styles.description }>{ playlist.description }</p>
+                <div className={ styles.button }>
+                  <Link href={ playlist.external_urls.spotify }>
+                      <a target="_blank" >Open In Spotify</a>
+                  </Link>
+                </div>
                 <div className={ styles.counts }>
                   <div className={ styles.wrapper}>
                     <FontAwesomeIcon icon={ faPerson } />
@@ -116,6 +125,10 @@ export default function Playlist({ playlist, songData, nextSlug, prevSlug }) {
                   <div className={ styles.wrapper}>
                     <FontAwesomeIcon icon={ faVolumeHigh } />
                     <p className={ styles.text }>{ songData.loudness } db</p>
+                  </div>
+                  <div className={ styles.wrapper}>
+                    <FontAwesomeIcon icon={ faStar } />
+                    <p className={ styles.text }>{ songData.topContributor.display_name }</p>
                   </div>
                 </div>
                 <div className={ styles.stats }>
@@ -143,13 +156,6 @@ export default function Playlist({ playlist, songData, nextSlug, prevSlug }) {
 export async function getStaticProps({ params }) {
     const response = await getPlaylistData(params.slug)
     const playlist = await response.json()
-
-    let contributors = {}
-    let songIDs = ''
-
-    playlist.tracks.items
-
-    // console.log(playlist.tracks)
 
     let tracks = []
     let next = playlist.tracks.next
