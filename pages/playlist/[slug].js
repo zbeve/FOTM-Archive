@@ -2,7 +2,6 @@ import { useRouter } from 'next/router'
 import ErrorPage from 'next/error'
 import { getPlaylistData, getAllPlaylists, getAllSongData, spotifyFetch } from '../../lib/spotify'
 import Image from 'next/image'
-import { usePlaylistContext } from '../../components/PlaylistContext'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMusic, faPerson, faHouse, faChevronRight, faChevronLeft, faHourglass, faVolumeHigh } from '@fortawesome/free-solid-svg-icons'
@@ -172,6 +171,8 @@ export async function getStaticProps({ params }) {
 
     const allSongData = await getAllSongData(tracks)
     const songData = await allSongData
+
+    await new Promise(r => setTimeout(r, 1000));
 
     const responsePlaylists = await getAllPlaylists()
     const playlists = await responsePlaylists
