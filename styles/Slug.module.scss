@@ -1,5 +1,5 @@
 .container {
-    margin: 4em;
+    margin: 4em 20em 4em 20em;
 
     .image {
         border: 0.5em solid white;
@@ -10,14 +10,73 @@
         }
     }
 
-
-
     .stats {
         .name {
             font-size: 1.5em;
             color: white;
             text-align: center;
         }
+
+        .counts {
+            display: flex;
+            flex-direction: row;
+
+            justify-content: space-around;
+            flex-wrap: wrap;
+
+            margin: 2em 0 2em 0;
+
+            .wrapper {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                
+                svg {
+                    color: #ff6f59;
+                    padding: 0.5em;
+                }
+
+                .text {
+                    color: #ffffff;
+                    padding: 0.5em;
+                    margin: 0;
+                }
+            }
+        }
+    }
+
+    .statsExplained {
+        margin-top: 4em;
+        // color: #ffffff;
+
+        .explanation {
+            margin-top: 2em;
+
+            .name {
+                display: inline;
+                color: #6b6b6b;
+                text-transform: uppercase;
+                margin-right: 1em;
+                font-weight: 800;
+            }
+
+            .description {
+                display: inline;
+                color: #ffffff;
+            }
+    
+            hr {
+                border: none;
+                height: 2px;
+                background-color: #ff6f59;
+                margin-bottom: 2em;
+            }
+        }
+
+    }
+
+    @media (max-width: 1000px) {
+        margin: 2em;
     }
 }
 
@@ -32,9 +91,11 @@
 
     background-color: #6b6b6b;
 
-    padding: 1em 4em 1em 4em;
+    padding: 1em 2em 1em 2em;
 
     margin: 0 0 2em 0;
+
+    z-index: 20;
 
     .navButton {
         width: 30%;
