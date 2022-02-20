@@ -201,6 +201,10 @@ export async function getStaticProps({ params }) {
       }
     })
 
+    console.log(playlist.name)
+    console.log(prevSlug + " | " + params.slug + " | " + nextSlug)
+    console.log("---------------------------")
+
     return {
         props: {
           playlist,
