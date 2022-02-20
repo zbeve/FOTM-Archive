@@ -13,8 +13,15 @@
     height: 90vh;
     width: 100vw;
 
-    overflow-x: scroll; /* Must be 'scroll' not 'auto' for ios */
+    overflow-x: scroll;
     -webkit-overflow-scrolling: touch;
+  }
+
+  @supports (-webkit-touch-callout: none) {
+    /* CSS specific to iOS devices */
+    height: 100%;
+    flex-direction: column;
+    margin-top: 2em;
   }
 }
 
@@ -32,5 +39,24 @@
     position: absolute;
     z-index: 10;
     top: 0;
+  }
+}
+
+@supports (-webkit-touch-callout: none) {
+  /* CSS specific to iOS devices */
+  .titleContainer {
+    height: 5em;
+    width: 100vw;
+    border-bottom: 3px solid #6b6b6b;
+    position: sticky;
+    top: 0;
+    background-color: #252525;
+    z-index: 10;
+
+    .title {
+      z-index: 11;
+      position: relative;
+      margin: 0;
+    }
   }
 }

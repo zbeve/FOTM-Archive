@@ -22,21 +22,24 @@ a {
 }
 
 @media (max-width: 1000px) {
-  ::-webkit-scrollbar {
-    height: 2em;
-    border-radius: 2em;
-  }
-  
-  ::-webkit-scrollbar-track {
-    border-radius: 2em;
-    margin: 2em;
-    background: #6b6b6b;
-  }
-  
-  ::-webkit-scrollbar-thumb {
-    background: #ff6f59;
-    border-radius: 2em;
-    width: 4em;
-    border: 3px solid #ffffff;
+  @supports not (-webkit-touch-callout: none) {
+    /* CSS for other than iOS devices */ 
+    ::-webkit-scrollbar {
+      height: 2em;
+      border-radius: 2em;
+    }
+    
+    ::-webkit-scrollbar-track {
+      border-radius: 2em;
+      margin: 2em;
+      background: #6b6b6b;
+    }
+    
+    ::-webkit-scrollbar-thumb {
+      background: #ff6f59;
+      border-radius: 2em;
+      width: 4em;
+      border: 3px solid #ffffff;
+    } 
   }
 }

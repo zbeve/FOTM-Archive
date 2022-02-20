@@ -5,9 +5,11 @@ import Playlist from '../components/Playlist'
 export default function Home({ playlists }) {
   return (
     <>
-      <h1 className={ styles.title }>FOTM Archive</h1>
+      <div className={ styles.titleContainer }>
+        <h1 className={ styles.title }>FOTM Archive</h1>
+      </div>
+      
       <div className={ styles.container }>
-        
         { playlists.map((playlist, index) => (
             <div className={ styles.playlistContainer } key={ playlist.id }>
               <Playlist playlist={ playlist } />

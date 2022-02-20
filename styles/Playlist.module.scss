@@ -93,7 +93,7 @@
             left: 0.2em;
             width: 2.5em;
             height: 2.5em;
-            color: rgb(37 37 37);
+            color: #252525;
         }
     }
 
@@ -120,5 +120,10 @@
             // vertical-align: middle !important;
             padding-top: 1em !important;
         }
+    }
+
+    @supports (-webkit-touch-callout: none) {
+        /* CSS specific to iOS devices */
+        width: 18em;
     }
 }
